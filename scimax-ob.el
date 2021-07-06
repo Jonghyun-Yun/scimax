@@ -525,162 +525,162 @@ Usually called in a hook function."
 ;; their keymaps with org-mode.
 ;; [2020-12-27 Sun] I am not sure this actually works right.
 
-(defcustom scimax-ob-python-edit-mode-map
-  (cond
-   ((boundp 'elpy-mode-map) elpy-mode-map)
-   ((boundp 'anaconda-mode-map) anaconda-mode-map)
-   (t nil))
-  "Keymap used in editing Python blocks. Defaults to `elpy-mode-map'.
-Use `anaconda-mode-map' if you prefer `anaconda-mode'. This
-keymap is combined with some other keymaps in
-`scimax-src-block-keymaps' to enable native edit commands in
-them."
-  :group :scimax)
+;; (defcustom scimax-ob-python-edit-mode-map
+;;   (cond
+;;    ((boundp 'elpy-mode-map) elpy-mode-map)
+;;    ((boundp 'anaconda-mode-map) anaconda-mode-map)
+;;    (t nil))
+;;   "Keymap used in editing Python blocks. Defaults to `elpy-mode-map'.
+;; Use `anaconda-mode-map' if you prefer `anaconda-mode'. This
+;; keymap is combined with some other keymaps in
+;; `scimax-src-block-keymaps' to enable native edit commands in
+;; them."
+;;   :group :scimax)
 
 
-(defcustom scimax-src-block-keymaps
-  `(("ipython" . ,(let ((map (copy-keymap (make-composed-keymap
-					   `(,scimax-ob-python-edit-mode-map
-					     ,python-mode-map
-					     ,pyvenv-mode-map)
-					   org-mode-map))))
-		    ;; In org-mode I define RET so we f
-		    (define-key map (kbd "<return>") 'newline)
-		    (define-key map (kbd "C-c C-c") 'org-ctrl-c-ctrl-c)
-		    map))
-    ("python" . ,(let ((map (copy-keymap (make-composed-keymap
-					  `(,scimax-ob-python-edit-mode-map
-					    ,python-mode-map
-					    ,pyvenv-mode-map)
-					  org-mode-map))))
-		   ;; In org-mode I define RET so we f
-		   (define-key map (kbd "<return>") 'newline)
-		   (define-key map (kbd "C-c C-c") 'org-ctrl-c-ctrl-c)
-		   map))
-    ("emacs-lisp" . ,(let ((map (copy-keymap (make-composed-keymap
-					      `(,lispy-mode-map
-						,emacs-lisp-mode-map
-						,outline-minor-mode-map)
-					      org-mode-map))))
-		       (define-key map (kbd "C-c C-c") 'org-ctrl-c-ctrl-c)
-		       map))
-    ("sh" . ,(let ((map (copy-keymap (make-composed-keymap
-				      `(,shell-mode-map)
-				      org-mode-map))))
-	       (define-key map (kbd "C-c C-c") 'org-ctrl-c-ctrl-c)
-	       map)))
-  "alist of custom keymaps for src blocks."
-  :group :scimax)
+;; (defcustom scimax-src-block-keymaps
+;;   `(("ipython" . ,(let ((map (copy-keymap (make-composed-keymap
+;; 					   `(,scimax-ob-python-edit-mode-map
+;; 					     ,python-mode-map
+;; 					     ,pyvenv-mode-map)
+;; 					   org-mode-map))))
+;; 		    ;; In org-mode I define RET so we f
+;; 		    (define-key map (kbd "<return>") 'newline)
+;; 		    (define-key map (kbd "C-c C-c") 'org-ctrl-c-ctrl-c)
+;; 		    map))
+;;     ("python" . ,(let ((map (copy-keymap (make-composed-keymap
+;; 					  `(,scimax-ob-python-edit-mode-map
+;; 					    ,python-mode-map
+;; 					    ,pyvenv-mode-map)
+;; 					  org-mode-map))))
+;; 		   ;; In org-mode I define RET so we f
+;; 		   (define-key map (kbd "<return>") 'newline)
+;; 		   (define-key map (kbd "C-c C-c") 'org-ctrl-c-ctrl-c)
+;; 		   map))
+;;     ("emacs-lisp" . ,(let ((map (copy-keymap (make-composed-keymap
+;; 					      `(,lispy-mode-map
+;; 						,emacs-lisp-mode-map
+;; 						,outline-minor-mode-map)
+;; 					      org-mode-map))))
+;; 		       (define-key map (kbd "C-c C-c") 'org-ctrl-c-ctrl-c)
+;; 		       map))
+;;     ("sh" . ,(let ((map (copy-keymap (make-composed-keymap
+;; 				      `(,shell-mode-map)
+;; 				      org-mode-map))))
+;; 	       (define-key map (kbd "C-c C-c") 'org-ctrl-c-ctrl-c)
+;; 	       map)))
+;;   "alist of custom keymaps for src blocks."
+;;   :group :scimax)
 
 
-(defun scimax-ob-add-keymap-to-src-blocks (limit)
-  "Add keymaps to src-blocks defined in `scimax-src-block-keymaps'.
-This is run by font-lock in `scimax-src-keymap-mode'."
-  (let ((case-fold-search t)
-	lang)
-    (while (re-search-forward org-babel-src-block-regexp limit t)
-      (let ((lang (match-string 2))
-	    (beg (match-beginning 0))
-	    (end (match-end 0)))
-	(if (assoc (org-no-properties lang) scimax-src-block-keymaps)
-	    (progn
-	      (add-text-properties
-	       beg end `(local-map ,(cdr (assoc
-					  (org-no-properties lang)
-					  scimax-src-block-keymaps))))
-	      (add-text-properties
-	       beg end `(cursor-sensor-functions
-			 ((lambda (win prev-pos sym)
-			    ;; This simulates a mouse click and makes a menu change
-			    (org-mouse-down-mouse nil)))))))))))
+;; (defun scimax-ob-add-keymap-to-src-blocks (limit)
+;;   "Add keymaps to src-blocks defined in `scimax-src-block-keymaps'.
+;; This is run by font-lock in `scimax-src-keymap-mode'."
+;;   (let ((case-fold-search t)
+;; 	lang)
+;;     (while (re-search-forward org-babel-src-block-regexp limit t)
+;;       (let ((lang (match-string 2))
+;; 	    (beg (match-beginning 0))
+;; 	    (end (match-end 0)))
+;; 	(if (assoc (org-no-properties lang) scimax-src-block-keymaps)
+;; 	    (progn
+;; 	      (add-text-properties
+;; 	       beg end `(local-map ,(cdr (assoc
+;; 					  (org-no-properties lang)
+;; 					  scimax-src-block-keymaps))))
+;; 	      (add-text-properties
+;; 	       beg end `(cursor-sensor-functions
+;; 			 ((lambda (win prev-pos sym)
+;; 			    ;; This simulates a mouse click and makes a menu change
+;; 			    (org-mouse-down-mouse nil)))))))))))
 
 
-(defun scimax-spoof-mode (orig-func &rest args)
-  "Advice function to spoof commands in org-mode src blocks.
-It is for commands that depend on the major mode. One example is
-`lispy--eval'."
-  (if (org-in-src-block-p)
-      (let ((major-mode (intern (format "%s-mode" (first (org-babel-get-src-block-info))))))
-	(apply orig-func args))
-    (apply orig-func args)))
+;; (defun scimax-spoof-mode (orig-func &rest args)
+;;   "Advice function to spoof commands in org-mode src blocks.
+;; It is for commands that depend on the major mode. One example is
+;; `lispy--eval'."
+;;   (if (org-in-src-block-p)
+;;       (let ((major-mode (intern (format "%s-mode" (first (org-babel-get-src-block-info))))))
+;; 	(apply orig-func args))
+;;     (apply orig-func args)))
 
 
-(define-minor-mode scimax-ob-src-keymap-mode
-  "Minor mode to add mode keymaps to src-blocks."
-  :init-value nil
-  (if scimax-ob-src-keymap-mode
-      (progn
-	(add-hook 'org-font-lock-hook #'scimax-ob-add-keymap-to-src-blocks t)
-	(add-to-list 'font-lock-extra-managed-props 'local-map)
-	(add-to-list 'font-lock-extra-managed-props 'keymap)
-	(add-to-list 'font-lock-extra-managed-props 'cursor-sensor-functions)
-	(advice-add 'lispy--eval :around 'scimax-ob-spoof-mode)
-	(cursor-sensor-mode +1)
-	(message "scimax-ob-src-keymap-mode enabled"))
-    (remove-hook 'org-font-lock-hook #'scimax-ob-add-keymap-to-src-blocks)
-    (advice-remove 'lispy--eval 'scimax-ob-spoof-mode)
-    (cursor-sensor-mode -1))
-  (font-lock-ensure))
+;; (define-minor-mode scimax-ob-src-keymap-mode
+;;   "Minor mode to add mode keymaps to src-blocks."
+;;   :init-value nil
+;;   (if scimax-ob-src-keymap-mode
+;;       (progn
+;; 	(add-hook 'org-font-lock-hook #'scimax-ob-add-keymap-to-src-blocks t)
+;; 	(add-to-list 'font-lock-extra-managed-props 'local-map)
+;; 	(add-to-list 'font-lock-extra-managed-props 'keymap)
+;; 	(add-to-list 'font-lock-extra-managed-props 'cursor-sensor-functions)
+;; 	(advice-add 'lispy--eval :around 'scimax-ob-spoof-mode)
+;; 	(cursor-sensor-mode +1)
+;; 	(message "scimax-ob-src-keymap-mode enabled"))
+;;     (remove-hook 'org-font-lock-hook #'scimax-ob-add-keymap-to-src-blocks)
+;;     (advice-remove 'lispy--eval 'scimax-ob-spoof-mode)
+;;     (cursor-sensor-mode -1))
+;;   (font-lock-ensure))
 
-;; (add-hook 'org-mode-hook (lambda ()
-;; 			   (scimax-ob-src-keymap-mode +1)))
+;; ;; (add-hook 'org-mode-hook (lambda ()
+;; ;; 			   (scimax-ob-src-keymap-mode +1)))
 
 
 ;; * line numbers
-(defvar scimax-ob-number-line-overlays '()
-  "List of overlays for line numbers.")
+;; (defvar scimax-ob-number-line-overlays '()
+;;   "List of overlays for line numbers.")
 
-(make-variable-buffer-local 'scimax-ob-number-line-overlays)
+;; (make-variable-buffer-local 'scimax-ob-number-line-overlays)
 
-(defun scimax-ob-toggle-line-numbers ()
-  (interactive)
-  (if scimax-ob-number-line-overlays
-      (scimax-ob-remove-line-numbers)
-    (scimax-ob-add-line-numbers)))
-
-
-(defun scimax-ob-remove-line-numbers ()
-  "Remove line numbers from "
-  (interactive)
-  (mapc 'delete-overlay
-	scimax-ob-number-line-overlays)
-  (setq-local scimax-ob-number-line-overlays '())
-  (remove-hook 'post-command-hook 'scimax-ob-add-line-numbers t))
+;; (defun scimax-ob-toggle-line-numbers ()
+;;   (interactive)
+;;   (if scimax-ob-number-line-overlays
+;;       (scimax-ob-remove-line-numbers)
+;;     (scimax-ob-add-line-numbers)))
 
 
-(defun scimax-ob-add-line-numbers ()
-  "Add line numbers to an org src-block."
-  (interactive)
-  (save-excursion
-    (let* ((src-block (org-element-context))
-	   (nlines (- (length
-		       (s-split
-			"\n"
-			(org-element-property :value src-block)))
-		      1)))
-      ;; clear any existing overlays
-      (scimax-ob-remove-line-numbers)
+;; (defun scimax-ob-remove-line-numbers ()
+;;   "Remove line numbers from "
+;;   (interactive)
+;;   (mapc 'delete-overlay
+;; 	scimax-ob-number-line-overlays)
+;;   (setq-local scimax-ob-number-line-overlays '())
+;;   (remove-hook 'post-command-hook 'scimax-ob-add-line-numbers t))
 
-      (goto-char (org-element-property :begin src-block))
-      ;; the beginning may be header, so we move forward to get the #+BEGIN
-      ;; line. Then jump one more to get in the code block
-      (while (not (looking-at "#\\+BEGIN"))
-	(forward-line))
-      (forward-line)
-      (loop for i from 1 to nlines
-	    do
-	    (beginning-of-line)
-	    (let (ov)
-	      (setq ov (make-overlay (point)(point)))
-	      (overlay-put
-	       ov
-	       'before-string (propertize
-			       (format "%03s " (number-to-string i))
-			       'font-lock-face '(:foreground "black" :background "gray80")))
-	      (push ov scimax-ob-number-line-overlays))
-	    (forward-line))))
-  ;; This allows you to update the numbers if you change the block, e.g. add/remove lines
-  (add-hook 'post-command-hook 'scimax-ob-add-line-numbers nil 'local))
+
+;; (defun scimax-ob-add-line-numbers ()
+;;   "Add line numbers to an org src-block."
+;;   (interactive)
+;;   (save-excursion
+;;     (let* ((src-block (org-element-context))
+;; 	   (nlines (- (length
+;; 		       (s-split
+;; 			"\n"
+;; 			(org-element-property :value src-block)))
+;; 		      1)))
+;;       ;; clear any existing overlays
+;;       (scimax-ob-remove-line-numbers)
+
+;;       (goto-char (org-element-property :begin src-block))
+;;       ;; the beginning may be header, so we move forward to get the #+BEGIN
+;;       ;; line. Then jump one more to get in the code block
+;;       (while (not (looking-at "#\\+BEGIN"))
+;; 	(forward-line))
+;;       (forward-line)
+;;       (loop for i from 1 to nlines
+;; 	    do
+;; 	    (beginning-of-line)
+;; 	    (let (ov)
+;; 	      (setq ov (make-overlay (point)(point)))
+;; 	      (overlay-put
+;; 	       ov
+;; 	       'before-string (propertize
+;; 			       (format "%03s " (number-to-string i))
+;; 			       'font-lock-face '(:foreground "black" :background "gray80")))
+;; 	      (push ov scimax-ob-number-line-overlays))
+;; 	    (forward-line))))
+;;   ;; This allows you to update the numbers if you change the block, e.g. add/remove lines
+;;   (add-hook 'post-command-hook 'scimax-ob-add-line-numbers nil 'local))
 
 
 ;; * Header editing
@@ -864,73 +864,73 @@ With a prefix arg cycle backwards."
 
 ;; * a hydra for src blocks
 
-(defhydra scimax-ob (:color red :hint nil)
-  "
-        Execute                   Navigate                 Edit             Misc
------------------------------------------------------------------------------------------------------------------------------
-    _<return>_: current           _i_: previous src        _w_: move up       ^ ^                         _<up>_:
-  _S-<return>_: current and next  _k_: next src            _s_: move down     _l_: clear result  _<left>_:           _<right>_:
-  _M-<return>_: current and new   _q_: visible src         _x_: kill          _L_: clear all              _<down>_:
-_S-M-<return>_: to point          _Q_: any src             _n_: copy          _o_: toggle result folding
-_C-M-<return>_: buffer       _C-<up>_: goto src start      _c_: clone         _N_: toggle line numbers
-           ^ ^             _C-<down>_: goto src end        _mm_: merge region
-           ^ ^             _C-<left>_: word left           _mp_: merge prev
-           ^ ^            _C-<right>_: word right          _mn_: merge next
-           ^ ^                  _C-<_: src begin           _-_: split
-           ^ ^                  _C->_: src end             _+_: insert above
-           ^ ^                    _R_: results             _=_: insert below
-           ^ ^                    ^ ^                      _h_: header
-_;_: dwim comment  _z_: undo  _y_: redo _r_: Goto repl
+;; (defhydra scimax-ob (:color red :hint nil)
+;;   "
+;;         Execute                   Navigate                 Edit             Misc
+;; -----------------------------------------------------------------------------------------------------------------------------
+;;     _<return>_: current           _i_: previous src        _w_: move up       ^ ^                         _<up>_:
+;;   _S-<return>_: current and next  _k_: next src            _s_: move down     _l_: clear result  _<left>_:           _<right>_:
+;;   _M-<return>_: current and new   _q_: visible src         _x_: kill          _L_: clear all              _<down>_:
+;; _S-M-<return>_: to point          _Q_: any src             _n_: copy          _o_: toggle result folding
+;; _C-M-<return>_: buffer       _C-<up>_: goto src start      _c_: clone         _N_: toggle line numbers
+;;            ^ ^             _C-<down>_: goto src end        _mm_: merge region
+;;            ^ ^             _C-<left>_: word left           _mp_: merge prev
+;;            ^ ^            _C-<right>_: word right          _mn_: merge next
+;;            ^ ^                  _C-<_: src begin           _-_: split
+;;            ^ ^                  _C->_: src end             _+_: insert above
+;;            ^ ^                    _R_: results             _=_: insert below
+;;            ^ ^                    ^ ^                      _h_: header
+;; _;_: dwim comment  _z_: undo  _y_: redo _r_: Goto repl
 
-"
-  ("o" ob-ipython-toggle-output :color red)
-  ("<up>" scimax-ob-edit-up :color red)
-  ("<down>" scimax-ob-edit-down :color red)
-  ("<left>" left-char :color red)
-  ("<right>" right-char :color red)
-  ("C-<up>" scimax-ob-jump-to-first-line :color red)
-  ("C-<down>" scimax-ob-jump-to-end-line :color red)
-  ("C-<left>" left-word :color red)
-  ("C-<right>" right-word :color red)
+;; "
+;;   ("o" ob-ipython-toggle-output :color red)
+;;   ("<up>" scimax-ob-edit-up :color red)
+;;   ("<down>" scimax-ob-edit-down :color red)
+;;   ("<left>" left-char :color red)
+;;   ("<right>" right-char :color red)
+;;   ("C-<up>" scimax-ob-jump-to-first-line :color red)
+;;   ("C-<down>" scimax-ob-jump-to-end-line :color red)
+;;   ("C-<left>" left-word :color red)
+;;   ("C-<right>" right-word :color red)
 
-  ("z" undo-tree-undo :color red)
-  ("y" undo-tree-redo :color red)
+;;   ("z" undo-tree-undo :color red)
+;;   ("y" undo-tree-redo :color red)
 
-  ("<return>" org-ctrl-c-ctrl-c :color blue)
-  ("S-<return>" scimax-ob-execute-and-next-block :color red)
-  ("M-<return>" (lambda ()
-		  "Execute and insert new block."
-		  (interactive)
-		  (scimax-ob-execute-and-next-block t)
-		  (font-lock-fontify-block)) :color red)
-  ("S-M-<return>" scimax-ob-execute-to-point :color blue)
-  ("C-M-<return>" org-babel-execute-buffer :color blue)
-  ("r" org-babel-switch-to-session)
-  ("N" scimax-ob-toggle-line-numbers)
+;;   ("<return>" org-ctrl-c-ctrl-c :color blue)
+;;   ("S-<return>" scimax-ob-execute-and-next-block :color red)
+;;   ("M-<return>" (lambda ()
+;; 		  "Execute and insert new block."
+;; 		  (interactive)
+;; 		  (scimax-ob-execute-and-next-block t)
+;; 		  (font-lock-fontify-block)) :color red)
+;;   ("S-M-<return>" scimax-ob-execute-to-point :color blue)
+;;   ("C-M-<return>" org-babel-execute-buffer :color blue)
+;;   ("r" org-babel-switch-to-session)
+;;   ("N" scimax-ob-toggle-line-numbers)
 
-  ("i" org-babel-previous-src-block :color red)
-  ("k" org-babel-next-src-block :color red)
-  ("q" scimax-ob-jump-to-visible-block)
-  ("Q" scimax-ob-jump-to-block)
-  ("C-<" scimax-ob-jump-to-first-line)
-  ("C->" scimax-ob-jump-to-end-line)
-  ("R" (goto-char (org-babel-where-is-src-block-result)))
+;;   ("i" org-babel-previous-src-block :color red)
+;;   ("k" org-babel-next-src-block :color red)
+;;   ("q" scimax-ob-jump-to-visible-block)
+;;   ("Q" scimax-ob-jump-to-block)
+;;   ("C-<" scimax-ob-jump-to-first-line)
+;;   ("C->" scimax-ob-jump-to-end-line)
+;;   ("R" (goto-char (org-babel-where-is-src-block-result)))
 
-  ("w" scimax-ob-move-src-block-up :color red)
-  ("s" scimax-ob-move-src-block-down :color red)
-  ("x" scimax-ob-kill-block-and-results)
-  ("n" scimax-ob-copy-block-and-results)
-  ("c" scimax-ob-clone-block)
-  ("mm" scimax-ob-merge-blocks)
-  ("mp" scimax-ob-merge-previous)
-  ("mn" scimax-ob-merge-next)
-  ("-" scimax-ob-split-src-block )
-  ("+" scimax-ob-insert-src-block)
-  ("=" (scimax-ob-insert-src-block t))
-  ("l" org-babel-remove-result)
-  ("L" scimax-ob-clear-all-results)
-  ("h" scimax-ob-edit-header)
-  (";" org-comment-dwim :color red))
+;;   ("w" scimax-ob-move-src-block-up :color red)
+;;   ("s" scimax-ob-move-src-block-down :color red)
+;;   ("x" scimax-ob-kill-block-and-results)
+;;   ("n" scimax-ob-copy-block-and-results)
+;;   ("c" scimax-ob-clone-block)
+;;   ("mm" scimax-ob-merge-blocks)
+;;   ("mp" scimax-ob-merge-previous)
+;;   ("mn" scimax-ob-merge-next)
+;;   ("-" scimax-ob-split-src-block )
+;;   ("+" scimax-ob-insert-src-block)
+;;   ("=" (scimax-ob-insert-src-block t))
+;;   ("l" org-babel-remove-result)
+;;   ("L" scimax-ob-clear-all-results)
+;;   ("h" scimax-ob-edit-header)
+;;   (";" org-comment-dwim :color red))
 
 
 (provide 'scimax-ob)
