@@ -121,17 +121,17 @@ This is a macro so I don't have to quote the hydra name."
 	       (symbol-name  hydra-curr-body-fn))))
 	    "\n"))))
 
-(defhydra scimax-base (:color blue)
+(defhydra scimax-base (:color blue :hint nil)
   "base"
+  ("C-u" (hydra--universal-argument current-prefix-arg) "C-u" :color red)
   ("," scimax-hydra-pop "back" :color blue)
+  ("." scimax-dispatch-mode-hydra "mode")
   ;; ("x" counsel-M-x "M-x")
   ;; ("s-s" save-buffer "save")
   ("/" undo-fu-only-undo "undo" :color red)
   ("\\" undo-fu-only-redo "redo" :color red)
   ;; "8" (switch-to-bufer "*scratch*") "*scratch*"
   ("?" scimax-hydra-help "help")
-  ("." scimax-dispatch-mode-hydra "mode")
-  ("C-u" (hydra--universal-argument current-prefix-arg) "C-u" :color red)
   ("q" nil "quit"))
 
 ;;* scimax hydra
@@ -234,7 +234,7 @@ This is a macro so I don't have to quote the hydra name."
 
 ;;** buffers
 
-(defhydra scimax-buffers (:color blue :inherit (scimax-base/heads) :columns 3 :hint nil)
+(defhydra scimax-buffers (:color blue :inherit (scimax-base/heads) :columns 10 :hint nil)
   "
 buffer
 Switch                  ^Kill                Split        Misc
@@ -248,8 +248,7 @@ Switch                  ^Kill                Split        Misc
  _s_: scratch           _4_: kill buf/win
  _f_: other frame       _6_: kill some
  _F_: buf in frame      _y_: bury
-------------------------------------------------------------------
-"
+------------------------------------------------------------------ "
   ("0" delete-window)
   ("1" delete-other-windows)
   ("2" split-window-below)
@@ -285,9 +284,8 @@ Switch                  ^Kill                Split        Misc
 
 ;;** edit/errors
 
-(defhydra scimax-errors (:color blue :inherit (scimax-base/heads) :columns 3 :hint nil)
+(defhydra scimax-errors (:color blue :inherit (scimax-base/heads) :columns 10 :hint nil)
   "
-edit/errors
 Edit                Errors             Numbers
 ------------------------------------------------------------------
 _a_: edit abbrevs   _n_: next error    _=_: evil-numbers
@@ -295,8 +293,7 @@ _c_: copy (dwim)    _p_: prev error
 _k_: kill (dwim)    _z_: recenter
 _v_: paste
 _V_: paste ring
-------------------------------------------------------------------
-"
+------------------------------------------------------------------ "
   ("a" edit-abbrevs)
   ("c" scimax-copy-dwim)
   ("v" yank)
@@ -310,7 +307,7 @@ _V_: paste ring
 
 ;;** files
 
-(defhydra scimax-files (:color blue :inherit (scimax-base/heads) :columns 3 :hint nil)
+(defhydra scimax-files (:color blue :inherit (scimax-base/heads) :columns 10 :hint nil)
   "
 files
 ------------------------------------------------------------------
@@ -501,7 +498,7 @@ _p_: ffap
 
 ;;** mark/minor modes
 
-(defhydra scimax-minor-modes (:color blue :inherit (scimax-base/heads) :columns 3 :hint nil)
+(defhydra scimax-minor-modes (:color blue :inherit (scimax-base/heads) :columns 10 :hint nil)
   "
 Marks                     minor-modes
 ------------------------------------------------------------------
@@ -515,8 +512,7 @@ _a_: mark buffer
 _e_: mark org-element
 _m_: set mark
 _j_: jump to mark
-------------------------------------------------------------------
-"
+------------------------------------------------------------------ "
   ;; ("i" aggressive-indent-mode)
   ;; ("b" org-bullets-mode)
   ("k" emacs-keybinding-command-tooltip-mode)
@@ -560,7 +556,7 @@ _j_: jump to mark
 
 
 (defhydra scimax-navigation (:color red :inherit (scimax-base/heads)
-				    :columns 4 :hint nil
+				    :columns 10 :hint nil
 				    :pre (setq scimax-hydra-mode-counter 0))
   "
 navigation
@@ -575,8 +571,7 @@ _z_: jump
 _f_: delete forward _d_: delete backward
 _t_: transpose chars
 _<tab>_: %(ring-ref scimax-hydra-modes (+ 1 scimax-hydra-mode-counter)) _S-<tab>_: %(ring-ref scimax-hydra-modes (- scimax-hydra-mode-counter 1))
------------------------------------------------------------------------------------
-"
+----------------------------------------------------------------------------------- "
   ("h" backward-char)
   ("l" forward-char)
   ("k" previous-line)
@@ -602,7 +597,7 @@ _<tab>_: %(ring-ref scimax-hydra-modes (+ 1 scimax-hydra-mode-counter)) _S-<tab>
 
 
 (defhydra scimax-nav-word (:color red :inherit (scimax-base/heads)
-				  :columns 4 :hint nil
+				  :columns 10 :hint nil
 				  :pre (setq scimax-hydra-mode-counter 1))
   "
 word navigation
@@ -634,7 +629,7 @@ _<tab>_: %(ring-ref scimax-hydra-modes (+ 1 scimax-hydra-mode-counter)) _S-<tab>
   ("S-<tab>" (scimax-hydra-cycle-navigation-mode t) :color blue))
 
 
-(defhydra scimax-nav-sentence (:color red :inherit (scimax-base/heads) :columns 4 :hint nil
+(defhydra scimax-nav-sentence (:color red :inherit (scimax-base/heads) :columns 10 :hint nil
 				      :pre (setq scimax-hydra-mode-counter 2))
   "
 sentence
@@ -661,7 +656,7 @@ _<tab>_: %(ring-ref scimax-hydra-modes (+ 1 scimax-hydra-mode-counter)) _S-<tab>
   ("S-<tab>" (scimax-hydra-cycle-navigation-mode t) :color blue))
 
 
-(defhydra scimax-nav-paragraph (:color red :inherit (scimax-base/heads) :columns 4 :hint nil
+(defhydra scimax-nav-paragraph (:color red :inherit (scimax-base/heads) :columns 10 :hint nil
 				       :pre (setq scimax-hydra-mode-counter 3))
   "
 paragraph
@@ -917,9 +912,8 @@ _C-a_ Async export: %`hydra-ox/async-export
 
 ;;** registers/resume/replace
 
-(defhydra scimax-registers (:color blue :inherit (scimax-base/heads) :columns 3)
+(defhydra scimax-registers (:color blue :inherit (scimax-base/heads) :hint nil)
   "
-register/resume/replace
 Register                     Resume             Replace
 ------------------------------------------------------------------
 _j_: jump to register        _h_: helm resume   _q_: query replace
@@ -1236,7 +1230,7 @@ _+_: strike
   ("_" org-underline-region-or-point)
   ("n" scimax-nav-word/body))
 
-(defhydra scimax-dired (:color blue :hint nil :inherit (scimax-base/heads))
+(defhydra scimax-dired (:color blue :inherit (scimax-base/heads) :hint nil)
   "
 Mark              Operate         Misc              Navigate
 ----              -------         ----              --------
@@ -1255,19 +1249,19 @@ _U_: unmark all   _A_: find regx
 _t_: toggle marks _Q_: find/rep
 "
   ;; marking
-  ("t" dired-toggle-marks "Toggle marks")
-  ("m" dired-mark "mark")
-  ("u" dired-unmark "unmark")
-  ("fd" dired-flag-file-deletion "Flag for deletion")
-  ("f#" dired-flag-auto-save-files "Flag autosave")
-  ("f~" dired-flag-backup-files "Flag backup files")
-  ("f&" dired-flag-garbage-files "Flag garbage files")
-  ("fe" dired-flag-extension "Flag extension")
-  ("/" dired-mark-directories "Mark directories")
-  ("@" dired-mark-symlinks "Mark symlinks")
-  ("." dired-mark-extension  "Mark extension")
-  ("O" dired-mark-omitted "Mark omitted")
-  ("U" dired-unmark-all-marks "Unmark all marks")
+  ("t" dired-toggle-marks)
+  ("m" dired-mark)
+  ("u" dired-unmark)
+  ("fd" dired-flag-file-deletion)
+  ("f#" dired-flag-auto-save-files)
+  ("f~" dired-flag-backup-files)
+  ("f&" dired-flag-garbage-files)
+  ("fe" dired-flag-extension)
+  ("/" dired-mark-directories)
+  ("@" dired-mark-symlinks)
+  ("." dired-mark-extension)
+  ("O" dired-mark-omitted)
+  ("U" dired-unmark-all-marks)
 
   ("C" dired-do-copy)
   ("R" dired-do-rename)
