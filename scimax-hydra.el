@@ -286,20 +286,15 @@ Switch                  ^Kill                Split        Misc
 
 (defhydra scimax-errors (:color blue :inherit (scimax-base/heads) :columns 10 :hint nil)
   "
-Edit                Errors             Numbers
-------------------------------------------------------------------
 _a_: edit abbrevs   _n_: next error    _=_: evil-numbers
-_c_: copy (dwim)    _p_: prev error
-_k_: kill (dwim)    _z_: recenter
-_v_: paste
-_V_: paste ring
------------------------------------------------------------------- "
+_c_: copy (dwim)    _p_: prev error    _v_: paste
+_k_: kill (dwim)    _z_: recenter      _V_: paste ring "
   ("a" edit-abbrevs)
   ("c" scimax-copy-dwim)
   ("v" yank)
-  ("V" counsel-yank-pop)
+  ("V" consult-yank-pop)
   ("k" scimax-kill-dwim)
-  ("z" recenter-top-bottom)
+  ("z" recenter-top-bottom :color red)
   ("=" (scimax-open-hydra my-hydra-evil-numbers/body))
   ("n" next-error :color red)
   ("p" previous-error :color red))
@@ -322,9 +317,9 @@ _p_: ffap
   ("d" (dired default-directory))
   ("f" find-file)
   ("k" kill-this-buffer)
-  ("l" counsel-locate)
+  ("l" consult-locate)
   ("p" ffap)
-  ("r" counsel-recentf)
+  ("r" consult-recentf)
   ("R" write-file))
 
 
@@ -391,7 +386,7 @@ _p_: ffap
   ("<" beginning-of-buffer "Beginning of buffer")
   (">" end-of-buffer "End of buffer")
   ("a" beginning-of-line "Beginning of line")
-  ("b" counsel-ibuffer "Buffer")
+  ("b" consult-ibuffer "Buffer")
   ("d" ace-window "Ace window")
   ("e" end-of-line "End of line")
   ("c" (scimax-open-hydra scimax-jump-char/body) "Char")
@@ -401,7 +396,7 @@ _p_: ffap
   ("k" counsel-ace-link "Link")
   ;; ("o" (scimax-open-hydra scimax-jump-org/body) "Org")
   ;; ("p" avy-jump-to-paragraph "Paragraph")
-  ("r" counsel-recentf "Recent file")
+  ("r" consult-recentf "Recent file")
   ;; ("s" avy-jump-to-sentence "Sentence")
   ("w" (scimax-open-hydra scimax-jump-word/body) "Word")
   ("y" (scimax-open-hydra scimax-jump-symbol/body) "Symbol" ))
@@ -576,7 +571,7 @@ _<tab>_: %(ring-ref scimax-hydra-modes (+ 1 scimax-hydra-mode-counter)) _S-<tab>
   ("l" forward-char)
   ("k" previous-line)
   ("j" next-line)
-  ("i" counsel-imenu)
+  ("i" consult-imenu)
   ("a" beginning-of-line)
   ("e" end-of-line)
   ("f" delete-char :color red)
@@ -616,7 +611,7 @@ _<tab>_: %(ring-ref scimax-hydra-modes (+ 1 scimax-hydra-mode-counter)) _S-<tab>
   ("j" next-line)
   ("<" beginning-of-buffer)
   (">" end-of-buffer)
-  ("i" counsel-imenu)
+  ("i" consult-imenu)
   ("a" beginning-of-line)
   ("e" end-of-line)
   ("f" (kill-word 1))
@@ -973,7 +968,7 @@ _l_: list registers
   ("u" upcase-dwim "upcase" :color red)
   ("v" yank "paste")
   ("w" count-words "count words")
-  ("y" counsel-yank-pop "yank ring")
+  ("y" consult-yank-pop "yank ring")
   (";" comment-dwim "comment")
   ;; (";" evilnc-comment-or-uncomment-lines "comment")
   (":" uncomment-region "uncomment")
