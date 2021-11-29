@@ -362,7 +362,7 @@ This saves the toggle state as a property on the variables that
 define the definitions."
   (interactive
    (list
-    (intern (ivy-read
+    (intern (completing-read
 	     "Collection: "
 	     '(scimax-month-abbreviations
 	       scimax-weekday-abbreviations
